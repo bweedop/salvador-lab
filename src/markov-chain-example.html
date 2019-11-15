@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta id="author" name="K. Bodie Weedop">
+        <title>Markov Chains | K. Bodie Weedop</title>
+    </head>
+    <body>
+        <script>
+            function getStates (num_states = 2) {
+                var states = [];
+                for (i = 65; i < 65 + num_states; i++) {
+                    states.push(String.fromCharCode(i))
+                }
+                return states;
+            }
+
+            function getRandomProb (num_states = 2) {
+                var tmpArray = [];
+
+                function arrSum (total, num) {
+                    return total + num;
+                }
+
+                for (i = 0; i < num_states; i++) {
+                    if (i != num_states - 1) {
+                        var tmpProb = Math.floor(Math.random(0.01) * 100) / 100;
+                    } else {
+                        var tmpProb = 1 - tmpArray.reduce(arrSum);
+                    }
+                    tmpArray.push(tmpProb);
+                }
+                return tmpArray;
+            }
+
+            function getTransMatrix (num_states = 2) {
+                var transMatrix = [];
+                for (i = 0; i < num_states; i++) {
+                    transMatrix.push(getRandomProb(num_states));
+                }                
+                return transMatrix;
+            }
+        </script>
+    </body>
+</html>
