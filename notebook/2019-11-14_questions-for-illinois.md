@@ -12,6 +12,7 @@ Verity et al. (2014) adapted the method of "geoprofiling" (GP, Rossmo 2000) to c
 
 ## Sex-specific genotype frequency changes driven by disease pressure 
 
-Previous research (Robinson et al. 2012) has shown evidence for disease-driven selection for some PRPN genotypes (96GS) in white-tailed deer. Male deer, however, are more susceptible to random mortality (hunting). Therefore, one might expect a higher selection coefficient seen in female white-tailed deer which have some allele that confers either some resistance or prolonged life after primary infection.
+Many studies have characterized genetic variation in white-tailed deer prion protein gene and how specific genotypes confer either susceptibility, an ability to cope with CWD (higher tolerance), or possibly partial resistance. Other research shows that demographic classes are infected at higher rates than others (older males vs. younger females). Robinson et al. (2012) show that differential rates of infection and death after infection are evidence for disease-driven selection. We would like to dive into the data available and investigate this disease-driven selection further with the questions below:
 
-The data from Illinois should give us some indication of death rates given age, sex, and genotype. These differential death rates may provide some insight into the population and evolutionary dynamics that can be expected in white-tailed deer populations residing in CWD endemic areas. 
+1. Is this disease-driven selection affecting demographic classes differently? Namely, is this selection seen only in male or female deer?
+2. Can we model and, later predict, the genetic composition of white-tailed deer populations in CWD endemic areas?
