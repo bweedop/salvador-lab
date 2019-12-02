@@ -5,6 +5,8 @@ if(length(new.packages))
     install.packages(new.packages)
 lapply(required.packages, require, character.only=TRUE)
 
+set.seed(18)
+
 # Loading data
 worms.data <- read.csv("./data/table_matrix_p_line_atr_tded.csv",
                         header = TRUE,
@@ -20,16 +22,23 @@ for (i in 1:nrow(data.cp)) {
     data.cp$beh1_num[i] <- which(behaviors == data.cp$beh1_name[i])
 }
 
-# Plot worm #1 behavior as a discrete function of time
-png("./figures/worm-1-behavior_no-copper.png", width = 1200, height = 480,
-    units = "px", pointsize = 12, bg = "white", res = NA)
-plot(data.cp$frame[which(data.cp$worm_ID == 1)], 
-     data.cp$beh1_num[which(data.cp$worm_ID == 1)],
-     xlab = "Frame",
-     ylab = "Behavior (Code)",
-     main = "Worm_ID => 1",
-     type = "l")
-dev.off()
+# Example worm behaviors that will be plotted
+plot.ids <- sample(unique(data.cp$worm_ID), 5)
+# Observation that models will be fitted to...
+fit.obs <- sample(unique(data.cp$worm_ID), 1)
+
+for (i in plot.ids) {
+    # Plot worm #1 behavior as a discrete function of time
+    png(paste("./figures/no-copper/worm-", i, "-behavior.png", sep=""), width = 1200, height = 480,
+        units = "px", pointsize = 12, bg = "white", res = NA)
+    plot(data.cp$frame[which(data.cp$worm_ID == i)], 
+         data.cp$beh1_num[which(data.cp$worm_ID == i)],
+         xlab = "Frame",
+         ylab = "Behavior (Code)",
+         main = paste("Worm_ID =>", i, "(No Copper)"),
+         type = "l")
+    dev.off()
+}
 
 # trans.mat - Transition matrix for the states of our hmm. These values are 
 #   established using the data that we have from Dr. Salvador's experiments.
@@ -72,10 +81,9 @@ for (g in 1:length(behaviors)) {
 
 # Initial HMM
 hmm <- initHMM(behaviors, behaviors, transProbs = trans.mat)
-print(hmm)
 
 # Sequence of observation; Do each separately
-for (i in unique(data.cp$worm_ID)[2]) {
+for (i in fit.obs) {
     observation <- data.cp$beh1_name[which(data.cp$worm_ID == i)]
     bw <- baumWelch(hmm, observation, 10)
 }
@@ -88,18 +96,18 @@ for(i in 1:length(sim.worm$observation)) {
 }
 
 # Plot simulated worm behavior as a discrete function of time
-png("figures/sim-worm-behavior_no-copper.png", width = 1200, height = 480,
+png("figures/no-copper/sim-worm-behavior.png", width = 1200, height = 480,
     units = "px", pointsize = 12, bg = "white", res = NA)
 plot(seq(1, 1289), 
      sim.worm$obs.code,
      xlab = "Frame",
      ylab = "Behavior (Code)",
-     main = "Simulated Worm",
+     main = "Simulated Worm (No Copper)",
      type = "l")
 dev.off()
 
 write.csv(bw$hmm$emissionProbs,
-          "data/hmm-emission-matrix_no-copper.csv")
+          "data/no-copper/hmm-emission-matrix.csv")
 
 ################################################################################
 # Include Copper behaviors
@@ -118,16 +126,23 @@ for (i in 1:nrow(data.cp)) {
     data.cp$beh1_num[i] <- which(behaviors == data.cp$beh1_name[i])
 }
 
-# Plot worm #1 behavior as a discrete function of time
-png("./figures/worm-1-behavior_copper.png", width = 1200, height = 480,
-    units = "px", pointsize = 12, bg = "white", res = NA)
-plot(data.cp$frame[which(data.cp$worm_ID == 1)], 
-     data.cp$beh1_num[which(data.cp$worm_ID == 1)],
-     xlab = "Frame",
-     ylab = "Behavior (Code)",
-     main = "Worm_ID => 1",
-     type = "l")
-dev.off()
+for (i in plot.ids) {
+    # Plot worm #1 behavior as a discrete function of time
+    png(paste("./figures/with-copper/worm-", i, "-behavior.png", sep=""), 
+        width = 1200, 
+        height = 480,
+        units = "px", 
+        pointsize = 12, 
+        bg = "white", 
+        res = NA)
+    plot(data.cp$frame[which(data.cp$worm_ID == i)], 
+         data.cp$beh1_num[which(data.cp$worm_ID == i)],
+         xlab = "Frame",
+         ylab = "Behavior (Code)",
+         main = paste("Worm_ID =>", i, "(Copper)"),
+         type = "l")
+    dev.off()
+}
 
 # trans.mat - Transition matrix for the states of our hmm. These values are 
 #   established using the data that we have from Dr. Salvador's experiments.
@@ -170,10 +185,9 @@ for (g in 1:length(behaviors)) {
 
 # Initial HMM
 hmm <- initHMM(behaviors, behaviors, transProbs = trans.mat)
-print(hmm)
 
 # Sequence of observation; Do each separately
-for (i in unique(data.cp$worm_ID)[2]) {
+for (i in fit.obs) {
     observation <- data.cp$beh1_name[which(data.cp$worm_ID == i)]
     bw <- baumWelch(hmm, observation, 10)
 }
@@ -186,18 +200,23 @@ for(i in 1:length(sim.worm$observation)) {
 }
 
 # Plot simulated worm behavior as a discrete function of time
-png("figures/sim-worm-behavior_copper.png", width = 1200, height = 480,
-    units = "px", pointsize = 12, bg = "white", res = NA)
+png("figures/with-copper/sim-worm-behavior.png", 
+    width = 1200, 
+    height = 480,
+    units = "px", 
+    pointsize = 12, 
+    bg = "white", 
+    res = NA)
 plot(seq(1, 1289), 
      sim.worm$obs.code,
      xlab = "Frame",
      ylab = "Behavior (Code)",
-     main = "Simulated Worm",
+     main = "Simulated Worm (Copper)",
      type = "l")
 dev.off()
 
 write.csv(bw$hmm$emissionProbs,
-          "data/hmm-emission-matrix_with-copper.csv")
+          "data/with-copper/hmm-emission-matrix.csv")
 
 ###############################################################################
 # HMM w/ Simple States
@@ -266,10 +285,9 @@ for (g in 1:length(states)) {
 
 # Initial HMM
 hmm <- initHMM(states, behaviors, transProbs = trans.mat)
-print(hmm)
 
 # Sequence of observation; Do each separately
-for (i in unique(data.cp$worm_ID)[1:5]) {
+for (i in fit.obs) {
     observation <- data.cp$beh1_name[which(data.cp$worm_ID == i)]
     bw <- baumWelch(hmm, observation, 10)
 }
@@ -282,8 +300,13 @@ for(i in 1:length(sim.worm$observation)) {
 }
 
 # Plot simulated worm behavior as a discrete function of time
-png("figures/sim-worm-behavior_simple-states.png", width = 1200, height = 480,
-    units = "px", pointsize = 12, bg = "white", res = NA)
+png("figures/two-state/sim-worm-behavior_simple-states.png", 
+    width = 1200, 
+    height = 480,
+    units = "px", 
+    pointsize = 12, 
+    bg = "white", 
+    res = NA)
 plot(seq(1, 1289), 
      sim.worm$obs.code,
      xlab = "Frame",
@@ -293,4 +316,4 @@ plot(seq(1, 1289),
 dev.off()
 
 write.csv(bw$hmm$emissionProbs,
-          "data/hmm-emission-matrix_simple-states.csv")
+          "data/two-state/hmm-emission-matrix_simple-states.csv")
