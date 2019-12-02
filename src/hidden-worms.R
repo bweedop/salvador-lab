@@ -200,7 +200,11 @@ write.csv(bw$hmm$emissionProbs,
           "data/hmm-emission-matrix_with-copper.csv")
 
 ###############################################################################
-#
+# HMM w/ Simple States
+# *** I wanted to see if we could simplify the states that are producing the 
+#     observations. I chose to exclude the copper behaviors here and just have
+#     two states (crawling and reorienting). It doesn't look as good but maybe
+#     it something that deserves some more attention.
 ###############################################################################
 
 # Processing the data
